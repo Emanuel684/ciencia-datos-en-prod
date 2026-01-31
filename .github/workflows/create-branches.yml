@@ -1,0 +1,46 @@
+name: Create Repository Branches
+
+on:
+  workflow_dispatch:
+  push:
+    branches:
+      - copilot/create-new-repo-branches
+
+jobs:
+  create-branches:
+    runs-on: ubuntu-latest
+    permissions:
+      contents: write
+    
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+      
+      - name: Configure Git
+        run: |
+          git config user.name "github-actions[bot]"
+          git config user.email "github-actions[bot]@users.noreply.github.com"
+      
+      - name: Create and push developer branch
+        run: |
+          git checkout -b developer 2>/dev/null || git checkout developer
+          git push origin developer || echo "Developer branch already exists"
+      
+      - name: Create and push certification branch
+        run: |
+          git checkout copilot/create-new-repo-branches
+          git checkout -b certification 2>/dev/null || git checkout certification
+          git push origin certification || echo "Certification branch already exists"
+      
+      - name: Create and push master branch
+        run: |
+          git checkout copilot/create-new-repo-branches
+          git checkout -b master 2>/dev/null || git checkout master
+          git push origin master || echo "Master branch already exists"
+      
+      - name: Verify branches
+        run: |
+          echo "Branches on remote:"
+          git ls-remote --heads origin
