@@ -77,6 +77,7 @@ class Outliers(BaseEstimator, TransformerMixin):
         return X[X["edad_cliente"] < 100].copy()
 
 class NuevasVariables(BaseEstimator, TransformerMixin):
+    pass
 
 
 class ToCategory(BaseEstimator, TransformerMixin):
